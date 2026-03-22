@@ -27,248 +27,187 @@ namespace SpendingTracker
             totalIncome();
             totalExpense();
         }
-
-        public void todayIncome()
-        {
-            using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
-            {
-                c.Open();
-                string query = "SELECT SUM(income) FROM income WHERE date_income = @date_income";
-                using (SqlCommand cmd = new SqlCommand(query, c))
-                {
-                    DateTime today = DateTime.Today;
-                    cmd.Parameters.AddWithValue("@date_income", today);
-
-                    object result = cmd.ExecuteScalar();
-
-                    if (result != DBNull.Value)
-                    {
-                        decimal todayIncome = Convert.ToDecimal(result);
-                        lbTodayInc.Text = todayIncome.ToString("C");
-                    }
-                    else
-                    {
-                        lbTodayInc.Text = "$0.00";
-                    }
-                }
-
-            }
-
+        
+       public void RefreshAll()
+       {
+          todayIncome(); todayExpense();
+          incomeYesterday(); expenseYesterday();
+          thisMonthIncome(); thisMonthExpense();
+          thisYearIncome(); thisYearExpense();
+          totalIncome(); totalExpense();
         }
+        
+         public void todayIncome()
+ {
+     using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
+     {
+         c.Open();
+         string query = "SELECT SUM(income) FROM income WHERE date_income = @date_income AND user_id = @user_id";
+         using (SqlCommand cmd = new SqlCommand(query, c))
+         {
+             cmd.Parameters.AddWithValue("@date_income", DateTime.Today);
+             cmd.Parameters.AddWithValue("@user_id", Session.Id);
 
-        public void incomeYesterday()
-        {
-            using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
-            {
-                c.Open();
-                string query = "SELECT SUM(income) FROM income WHERE CONVERT(DATE, date_income) = DATEADD(day, DATEDIFF(day, 0, GETDATE()), -1)";
-                using (SqlCommand cmd = new SqlCommand(query, c))
-                {
-                    object result = cmd.ExecuteScalar();
-                    if (result != DBNull.Value)
-                    {
-                        decimal yesterdayIncome = Convert.ToDecimal(result);
-                        lbYesterdayInc.Text = yesterdayIncome.ToString("C");
-                    }
-                    else
-                    {
-                        lbYesterdayInc.Text = "$0.00";
-                    }
-                }
-                c.Close();
-            }
-        }
+             object result = cmd.ExecuteScalar();
+             lbTodayInc.Text = (result != DBNull.Value && result != null)
+                 ? Convert.ToDecimal(result).ToString("C") : "$0.00";
+         }
+     }
+ }
 
-        public void thisMonthIncome()
-        {
-            using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
-            {
-                c.Open();
-                string query = "SELECT SUM(income) FROM income WHERE MONTH(date_income) = MONTH(GETDATE()) AND YEAR(date_income) = YEAR(GETDATE())";
-                using (SqlCommand cmd = new SqlCommand(query, c))
-                {
-                    object result = cmd.ExecuteScalar();
-                    if (result != DBNull.Value)
-                    {
-                        decimal thisMonthIncome = Convert.ToDecimal(result);
-                        lbMonthInc.Text = thisMonthIncome.ToString("C");
-                    }
-                    else
-                    {
-                        lbMonthInc.Text = "$0.00";
-                    }
-                }
-                c.Close();
-            }
-        }
+ public void incomeYesterday()
+ {
+     using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
+     {
+         c.Open();
+         string query = "SELECT SUM(income) FROM income WHERE CONVERT(DATE, date_income) = DATEADD(day, DATEDIFF(day, 0, GETDATE()), -1) AND user_id = @user_id";
+         using (SqlCommand cmd = new SqlCommand(query, c))
+         {
+             cmd.Parameters.AddWithValue("@user_id", Session.Id);
 
-        public void thisYearIncome()
-        {
-            using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
-            {
-                c.Open();
-                string query = "SELECT SUM(income) FROM income WHERE YEAR(date_income) = YEAR(GETDATE())";
-                using (SqlCommand cmd = new SqlCommand(query, c))
-                {
-                    object result = cmd.ExecuteScalar();
-                    if (result != DBNull.Value)
-                    {
-                        decimal thisYearIncome = Convert.ToDecimal(result);
-                        lbYearInc.Text = thisYearIncome.ToString("C");
-                    }
-                    else
-                    {
-                        lbYearInc.Text = "$0.00";
-                    }
-                }
-                c.Close();
-            }
-        }
+             object result = cmd.ExecuteScalar();
+             lbYesterdayInc.Text = (result != DBNull.Value && result != null)
+                 ? Convert.ToDecimal(result).ToString("C") : "$0.00";
+         }
+     }
+ }
 
-        public void totalIncome()
-        {
-            using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
-            {
-                c.Open();
-                string query = "SELECT SUM(income) FROM income";
-                using (SqlCommand cmd = new SqlCommand(query, c))
-                {
-                    object result = cmd.ExecuteScalar();
-                    if (result != DBNull.Value)
-                    {
-                        decimal totalIncome = Convert.ToDecimal(result);
-                        lbTotalInc.Text = totalIncome.ToString("C");
-                    }
-                    else
-                    {
-                        lbTotalInc.Text = "$0.00";
-                    }
-                }
-                c.Close();
-            }
-        }
+ public void thisMonthIncome()
+ {
+     using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
+     {
+         c.Open();
+         string query = "SELECT SUM(income) FROM income WHERE MONTH(date_income) = MONTH(GETDATE()) AND YEAR(date_income) = YEAR(GETDATE()) AND user_id = @user_id";
+         using (SqlCommand cmd = new SqlCommand(query, c))
+         {
+             cmd.Parameters.AddWithValue("@user_id", Session.Id);
 
-        //expense
+             object result = cmd.ExecuteScalar();
+             lbMonthInc.Text = (result != DBNull.Value && result != null)
+                 ? Convert.ToDecimal(result).ToString("C") : "$0.00";
+         }
+     }
+ }
 
-        public void todayExpense()
-        {
-            using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
-            {
-                c.Open();
-                string query = "SELECT SUM(payment) FROM expense WHERE date_payment = @date_payment";
-                using (SqlCommand cmd = new SqlCommand(query, c))
-                {
-                    DateTime today = DateTime.Today;
-                    cmd.Parameters.AddWithValue("@date_payment", today);
+ public void thisYearIncome()
+ {
+     using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
+     {
+         c.Open();
+         string query = "SELECT SUM(income) FROM income WHERE YEAR(date_income) = YEAR(GETDATE()) AND user_id = @user_id";
+         using (SqlCommand cmd = new SqlCommand(query, c))
+         {
+             cmd.Parameters.AddWithValue("@user_id", Session.Id);
 
-                    object result = cmd.ExecuteScalar();
+             object result = cmd.ExecuteScalar();
+             lbYearInc.Text = (result != DBNull.Value && result != null)
+                 ? Convert.ToDecimal(result).ToString("C") : "$0.00";
+         }
+     }
+ }
 
-                    if (result != DBNull.Value)
-                    {
-                        decimal todayExpe = Convert.ToDecimal(result);
-                        lbTodayExp.Text = todayExpe.ToString("C");
-                    }
-                    else
-                    {
-                        lbTodayExp.Text = "$0.00";
-                    }
-                }
+ public void totalIncome()
+ {
+     using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
+     {
+         c.Open();
+         string query = "SELECT SUM(income) FROM income WHERE user_id = @user_id";
+         using (SqlCommand cmd = new SqlCommand(query, c))
+         {
+             cmd.Parameters.AddWithValue("@user_id", Session.Id);
 
-            }
+             object result = cmd.ExecuteScalar();
+             lbTotalInc.Text = (result != DBNull.Value && result != null)
+                 ? Convert.ToDecimal(result).ToString("C") : "$0.00";
+         }
+     }
+ }
 
-        }
+ public void todayExpense()
+ {
+     using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
+     {
+         c.Open();
+         string query = "SELECT SUM(payment) FROM expense WHERE date_payment = @date_payment AND user_id = @user_id";
+         using (SqlCommand cmd = new SqlCommand(query, c))
+         {
+             cmd.Parameters.AddWithValue("@date_payment", DateTime.Today);
+             cmd.Parameters.AddWithValue("@user_id", Session.Id);
 
-        public void expenseYesterday()
-        {
-            using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
-            {
-                c.Open();
-                string query = "SELECT SUM(payment) FROM expense WHERE CONVERT(DATE, date_payment) = DATEADD(day, DATEDIFF(day, 0, GETDATE()), -1)";
-                using (SqlCommand cmd = new SqlCommand(query, c))
-                {
-                    object result = cmd.ExecuteScalar();
-                    if (result != DBNull.Value)
-                    {
-                        decimal yesterdayIncome = Convert.ToDecimal(result);
-                        lbYesterdayExp.Text = yesterdayIncome.ToString("C");
-                    }
-                    else
-                    {
-                        lbYesterdayExp.Text = "$0.00";
-                    }
-                }
-                c.Close();
-            }
-        }
+             object result = cmd.ExecuteScalar();
+             lbTodayExp.Text = (result != DBNull.Value && result != null)
+                 ? Convert.ToDecimal(result).ToString("C") : "$0.00";
+         }
+     }
+ }
 
-        public void thisMonthExpense()
-        {
-            using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
-            {
-                c.Open();
-                string query = "SELECT SUM(payment) FROM expense WHERE MONTH(date_payment) = MONTH(GETDATE()) AND YEAR(date_payment) = YEAR(GETDATE())";
-                using (SqlCommand cmd = new SqlCommand(query, c))
-                {
-                    object result = cmd.ExecuteScalar();
-                    if (result != DBNull.Value)
-                    {
-                        decimal thisMonthIncome = Convert.ToDecimal(result);
-                        lbMonthExp.Text = thisMonthIncome.ToString("C");
-                    }
-                    else
-                    {
-                        lbMonthExp.Text = "$0.00";
-                    }
-                }
-                c.Close();
-            }
-        }
+ public void expenseYesterday()
+ {
+     using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
+     {
+         c.Open();
+         string query = "SELECT SUM(payment) FROM expense WHERE CONVERT(DATE, date_payment) = DATEADD(day, DATEDIFF(day, 0, GETDATE()), -1) AND user_id = @user_id";
+         using (SqlCommand cmd = new SqlCommand(query, c))
+         {
+             cmd.Parameters.AddWithValue("@user_id", Session.Id);
 
-        public void thisYearExpense()
-        {
-            using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
-            {
-                c.Open();
-                string query = "SELECT SUM(payment) FROM expense WHERE YEAR(date_payment) = YEAR(GETDATE())";
-                using (SqlCommand cmd = new SqlCommand(query, c))
-                {
-                    object result = cmd.ExecuteScalar();
-                    if (result != DBNull.Value)
-                    {
-                        decimal thisYearIncome = Convert.ToDecimal(result);
-                        lbYearExp.Text = thisYearIncome.ToString("C");
-                    }
-                    else
-                    {
-                        lbYearExp.Text = "$0.00";
-                    }
-                }
-                c.Close();
-            }
-        }
+             object result = cmd.ExecuteScalar();
+             lbYesterdayExp.Text = (result != DBNull.Value && result != null)
+                 ? Convert.ToDecimal(result).ToString("C") : "$0.00";
+         }
+     }
+ }
 
-        public void totalExpense()
-        {
-            using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
-            {
-                c.Open();
-                string query = "SELECT SUM(payment) FROM expense";
-                using (SqlCommand cmd = new SqlCommand(query, c))
-                {
-                    object result = cmd.ExecuteScalar();
-                    if (result != DBNull.Value)
-                    {
-                        decimal totalIncome = Convert.ToDecimal(result);
-                        lbTotalExp.Text = totalIncome.ToString("C");
-                    }
-                    else
-                    {
-                        lbTotalExp.Text = "$0.00";
-                    }
-                }
-                c.Close();
-            }
-        }
+ public void thisMonthExpense()
+ {
+     using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
+     {
+         c.Open();
+         string query = "SELECT SUM(payment) FROM expense WHERE MONTH(date_payment) = MONTH(GETDATE()) AND YEAR(date_payment) = YEAR(GETDATE()) AND user_id = @user_id";
+         using (SqlCommand cmd = new SqlCommand(query, c))
+         {
+             cmd.Parameters.AddWithValue("@user_id", Session.Id);
+
+             object result = cmd.ExecuteScalar();
+             lbMonthExp.Text = (result != DBNull.Value && result != null)
+                 ? Convert.ToDecimal(result).ToString("C") : "$0.00";
+         }
+     }
+ }
+
+ public void thisYearExpense()
+ {
+     using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
+     {
+         c.Open();
+         string query = "SELECT SUM(payment) FROM expense WHERE YEAR(date_payment) = YEAR(GETDATE()) AND user_id = @user_id";
+         using (SqlCommand cmd = new SqlCommand(query, c))
+         {
+             cmd.Parameters.AddWithValue("@user_id", Session.Id);
+
+             object result = cmd.ExecuteScalar();
+             lbYearExp.Text = (result != DBNull.Value && result != null)
+                 ? Convert.ToDecimal(result).ToString("C") : "$0.00";
+         }
+     }
+ }
+
+ public void totalExpense()
+ {
+     using (SqlConnection c = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SpendingsDB;Integrated Security=True;"))
+     {
+         c.Open();
+         string query = "SELECT SUM(payment) FROM expense WHERE user_id = @user_id";
+         using (SqlCommand cmd = new SqlCommand(query, c))
+         {
+             cmd.Parameters.AddWithValue("@user_id", Session.Id);
+
+             object result = cmd.ExecuteScalar();
+             lbTotalExp.Text = (result != DBNull.Value && result != null)
+                 ? Convert.ToDecimal(result).ToString("C") : "$0.00";
+         }
+     }
+ }
 
         private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
