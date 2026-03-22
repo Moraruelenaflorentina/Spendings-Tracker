@@ -41,6 +41,7 @@ namespace SpendingTracker
 
         private void Dashboardmbtn_Click(object sender, EventArgs e)
         {
+            dashboardForm1.RefreshAll();
             dashboardForm1.Visible = true;
             categoryForm1.Visible = false;
             incomeForm1.Visible = false;
