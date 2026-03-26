@@ -1,4 +1,4 @@
-# 💰 SpendingsTracker
+#  SpendingsTracker
 
 A simple and straightforward Windows desktop application for tracking your income and expenses — so you always know where your money is going.
 
@@ -6,7 +6,7 @@ A simple and straightforward Windows desktop application for tracking your incom
 
 ---
 
-## 📋 Description
+##  Description
 
 **SpendingsTracker** is a Windows Forms Application (WFA) built with C# and .NET. It allows anyone to easily log their income and expenses, giving them a clearer picture of their personal finances without the complexity of full-scale accounting software.
 
@@ -14,7 +14,7 @@ Whether you want to keep tabs on your monthly budget or just see how much you've
 
 ---
 
-## ✨ Features (Current)
+##  Features (Current)
 
 - Log income entries
 - Log expense entries
@@ -23,7 +23,7 @@ Whether you want to keep tabs on your monthly budget or just see how much you've
 
 ---
 
-## 🖥️ How to Use
+##  How to Use
 
 ### 1. Launch the App
 Open `SpendingsTracker.exe` (or run the project from Visual Studio).
@@ -46,7 +46,7 @@ Open `SpendingsTracker.exe` (or run the project from Visual Studio).
 ### 4. View Your Summary
 - Go to the **Dasboard** section to see your total income, total expenses, and remaining balance
 
-> 📸 <img width="836" height="724" alt="image" src="https://github.com/user-attachments/assets/029dc29b-b113-4e2a-be02-d26f96e8cbf4" />
+>  <img width="836" height="724" alt="image" src="https://github.com/user-attachments/assets/029dc29b-b113-4e2a-be02-d26f96e8cbf4" />
 >    <img width="832" height="734" alt="image" src="https://github.com/user-attachments/assets/dbe6246b-3335-40f6-86c2-90f5ae4e67e5" />
 > <img width="1214" height="856" alt="image" src="https://github.com/user-attachments/assets/4cf001a3-64ae-4e8a-a84f-dcc7d460f3b0" />
 > <img width="1207" height="853" alt="image" src="https://github.com/user-attachments/assets/c2d13f24-62d3-4870-bcac-be625c50271b" />
@@ -62,7 +62,7 @@ Open `SpendingsTracker.exe` (or run the project from Visual Studio).
 
 ---
 
-## 🛠️ Built With
+##  Built With
 
 - [C#](https://learn.microsoft.com/en-us/dotnet/csharp/)
 - [.NET Windows Forms (WFA)](https://learn.microsoft.com/en-us/dotnet/desktop/winforms/)
@@ -70,7 +70,7 @@ Open `SpendingsTracker.exe` (or run the project from Visual Studio).
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - Windows OS
@@ -89,6 +89,6 @@ Open `SpendingsTracker.exe` (or run the project from Visual Studio).
 
 
 
-## 📄 License
+##  License
 
 This project is open source and available under the [MIT License](LICENSE).
